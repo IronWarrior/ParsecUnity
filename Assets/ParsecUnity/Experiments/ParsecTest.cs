@@ -153,7 +153,7 @@ public class ParsecTest : MonoBehaviour
         decoder.Decode(frame, image);
 
         Vector2 padding = new Vector2((float)frame.width / frame.fullWidth, (float)frame.height / frame.fullHeight);
-        parsecGuestView.Populate(decoder.Y, decoder.U, decoder.V, padding);
+        parsecGuestView.Populate(decoder.Y, decoder.U, decoder.V, padding, decoder.AspectRatio);
     }
 
     private IEnumerator CheckStatus()

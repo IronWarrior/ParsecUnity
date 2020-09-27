@@ -142,7 +142,7 @@ public class ParsecUnityController : MonoBehaviour
     {
         parsecFrameDecoder.Decode(frame, image);
         // TODO: Could just initialize the guest view with the decoder?
-        parsecGuestView.Populate(parsecFrameDecoder.Y, parsecFrameDecoder.U, parsecFrameDecoder.V, parsecFrameDecoder.Padding);
+        parsecGuestView.Populate(parsecFrameDecoder.Y, parsecFrameDecoder.U, parsecFrameDecoder.V, parsecFrameDecoder.Padding, parsecFrameDecoder.AspectRatio);
     }
     #endregion
 

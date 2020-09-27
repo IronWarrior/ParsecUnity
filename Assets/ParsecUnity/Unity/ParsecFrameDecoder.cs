@@ -11,6 +11,7 @@ public class ParsecFrameDecoder
     public Texture2D V { get; private set; }
 
     public Vector2 Padding { get; private set; }
+    public float AspectRatio { get; private set; }
 
     // TODO: I don't know for certain, but this is probably not the most efficient way of
     // getting an image to Unity. I'm guessing that ClientPollFrame pulls the texture
@@ -52,5 +53,6 @@ public class ParsecFrameDecoder
         V.Apply();
 
         Padding = new Vector2((float)frame.width / frame.fullWidth, (float)frame.height / frame.fullHeight);
+        AspectRatio = (float)frame.width / (float)frame.height;
     }
 }

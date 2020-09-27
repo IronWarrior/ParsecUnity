@@ -88,6 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 882f8f1ef4bc80e4599cfab684d869c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  frame: {fileID: 3216626056764873287}
 --- !u!1 &3216626056764873285
 GameObject:
   m_ObjectHideFlags: 0
@@ -100,7 +101,7 @@ GameObject:
   - component: {fileID: 3216626056764873286}
   - component: {fileID: 3216626056764873287}
   m_Layer: 8
-  m_Name: Quad
+  m_Name: Frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
