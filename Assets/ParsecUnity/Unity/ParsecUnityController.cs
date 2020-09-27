@@ -121,6 +121,9 @@ public class ParsecUnityController : MonoBehaviour
         gameObject.AddComponent<ParsecGuestInput>().Initialize(Parsec);
     }
 
+    /// <summary>
+    /// Instantiates a client view and begins polling for frames to populate it.
+    /// </summary>
     public void StartClientPollFrames()
     {
         parsecFrameDecoder = new ParsecFrameDecoder();

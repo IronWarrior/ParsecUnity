@@ -39,6 +39,7 @@
                 return o;
             }
 
+            // Conversion function from: https://stackoverflow.com/a/54334776
             float3 YUVtoRGB(float3 yuv)
             {
                 float3 rgb;

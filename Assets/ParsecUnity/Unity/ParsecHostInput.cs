@@ -8,6 +8,9 @@ using UnityEngine.InputSystem.LowLevel;
 // into the Unity Input System, as the app may require focus for the injected
 // inputs to be run. It's nice that this is a fully seamless way to architect it,
 // but this could be a critical problem for some apps.
+// TODO: The Input System-specific code should be moved to a different module. This
+// class would then only be responsible for polymorphically converting Parsec inputs
+// to the module's domain, and surfacing the converted inputs to the app.
 public class ParsecHostInput : MonoBehaviour
 {
     private Parsec parsec;
