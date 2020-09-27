@@ -68,3 +68,9 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Parsec libraries
+*parsec.dll
+*parsec.bundle
+*parsec32.dll
+*ParsecUnity46.dll
