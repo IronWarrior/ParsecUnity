@@ -22,7 +22,7 @@ To start a host and connect a client, you will need a Parsec account (created on
 
 Run the scene [Assets/ParsecUnity/Experiments/ParsecTest](Assets/ParsecUnity/Experiments/ParsecTest.unity) to get started. The status will be displayed on screen if the connection is successful. Tick the **Try Make Texture** toggle on the client to start polling for video frames.
 
-If you have successfully run the above scene, you can try the demo project in [Assets/Demo/Main](Assets/Demo/Main.unity). This uses the Unity Input System to handle input.
+If you have successfully run the above scene, you can try the demo project in [Assets/Demo/Main](Assets/Demo/Main.unity). This uses the Unity Input System to handle input. Note that in the Editor, to allow guest inputs to be correctly read on the host, you'll need to lock input in the host Editor instance (`Window > Analysis > Input Debugger > Options > Lock Input to Game View`).
 
 # TODO
 
