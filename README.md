@@ -27,7 +27,7 @@ If you have successfully run the above scene, you can try the demo project in [A
 # TODO
 
 - Unity sometimes crashes when attempting to connect a client. Unknown why.
-- Parsec supports [many different color formats](https://parsecgaming.com/docs/sdk/enum/ParsecColorFormat/) for streaming. Currently `FORMAT_I420` is the only supported one in this package (not sure how to force the host to use a specific format to test the others).
+- Parsec supports [many different color formats](https://parsecgaming.com/docs/sdk/enum/ParsecColorFormat/) for streaming. Currently `FORMAT_I420` is the only supported one in this package (not sure how to force the host to use a specific format to test the others). The color in the guest view is also slightly off right now.
 - Audio is not currently supported. The [Parsec Unity SDK](https://github.com/parsec-cloud/parsec-sdk/tree/master/sdk/ParsecUnity) does have an example that supports outgoing audio from a single AudioSource. Currently the exception *`MarshalDirectiveException: [MarshalAs] attribute required to marshal arrays to managed code.`* is thrown when calling `Parsec.ClientPollAudio`.
 - Unity Input System is the only supported input on both the host and client. The Parsec Unity SDK does have input for both the legacy input and Rewired, so adding in more input systems should not be challenging.
 - ...and lots more! Search for `// TODO` in the comments.
