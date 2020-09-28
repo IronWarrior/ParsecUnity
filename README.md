@@ -4,6 +4,8 @@ This repository uses the [Parsec C# SDK](https://github.com/parsec-cloud/parsec-
 
 ![Screenshot of both local and remote views of the demo game](https://i.imgur.com/TBphcwK.png)
 
+[Demo video](https://gfycat.com/specificuncomfortableargentinehornedfrog)
+
 # Getting Started
 
 This repository does not contain the Parsec SDK libraries. You will need to copy the following into this repo from the [Parsec SDK](https://github.com/parsec-cloud/parsec-sdk):
