@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using ParsecGaming;
 using System.Collections.Generic;
 using UnityEngine.InputSystem.LowLevel;
+using Boo.Lang.Environments;
 
 // TODO: It's overall probably not recommended to directly inject inputs
 // into the Unity Input System, as the app may require focus for the injected
@@ -56,10 +57,13 @@ public class ParsecHostInput : MonoBehaviour
             switch (msg.type)
             {
                 case Parsec.ParsecMessageType.MESSAGE_KEYBOARD:
-                        if (!keyboardMessages.ContainsKey(guest.id))
-                            keyboardMessages[guest.id] = new List<Parsec.ParsecMessage>();
+                    if (!keyboardMessages.ContainsKey(guest.id))
+                        keyboardMessages[guest.id] = new List<Parsec.ParsecMessage>();
 
-                        keyboardMessages[guest.id].Add(msg);
+                    keyboardMessages[guest.id].Add(msg);
+                    break;
+                case Parsec.ParsecMessageType.MESSAGE_MOUSE_BUTTON:
+                    ParsecUnityController.Log($"Guest {guest.id} {(msg.mouseButton.pressed ? "pressed" : "released")} mouse button {msg.mouseButton} at {Time.time}");
                     break;
                 default:
                     break;

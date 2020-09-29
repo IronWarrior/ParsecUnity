@@ -22,8 +22,7 @@ public class ParsecGuestInput : MonoBehaviour
             {
                 if (keyboard[kvp.Value].wasPressedThisFrame || keyboard[kvp.Value].wasReleasedThisFrame)
                 {
-                    Parsec.ParsecMessage message = new Parsec.ParsecMessage();
-                    message.type = Parsec.ParsecMessageType.MESSAGE_KEYBOARD;
+                    var message = new Parsec.ParsecMessage { type = Parsec.ParsecMessageType.MESSAGE_KEYBOARD };
 
                     message.keyboard.code = kvp.Key;
                     message.keyboard.pressed = keyboard[kvp.Value].wasPressedThisFrame;
@@ -41,8 +40,7 @@ public class ParsecGuestInput : MonoBehaviour
         {
             if (mouse.leftButton.wasPressedThisFrame || mouse.leftButton.wasReleasedThisFrame)
             {
-                Parsec.ParsecMessage message = new Parsec.ParsecMessage();
-                message.type = Parsec.ParsecMessageType.MESSAGE_MOUSE_BUTTON;
+                var message = new Parsec.ParsecMessage { type = Parsec.ParsecMessageType.MESSAGE_MOUSE_BUTTON };
 
                 message.mouseButton.button = Parsec.ParsecMouseButton.MOUSE_L;
                 message.mouseButton.pressed = mouse.leftButton.wasPressedThisFrame;
@@ -57,8 +55,7 @@ public class ParsecGuestInput : MonoBehaviour
 
             if (deltaX > 0 || deltaY > 0)
             {
-                Parsec.ParsecMessage message = new Parsec.ParsecMessage();
-                message.type = Parsec.ParsecMessageType.MESSAGE_MOUSE_MOTION;
+                var message = new Parsec.ParsecMessage { type = Parsec.ParsecMessageType.MESSAGE_MOUSE_MOTION };
 
                 message.mouseMotion.relative = true;
                 message.mouseMotion.x = deltaX;
