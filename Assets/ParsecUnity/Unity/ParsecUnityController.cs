@@ -1,10 +1,15 @@
 ﻿using ParsecGaming;
 using System;
 using System.Collections;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class ParsecUnityController : MonoBehaviour
 {
+    /// <summary>
+    /// NOTE: Ideally this should be accessed publicly as little as possible, with
+    /// all relevant data and operations encapsulated to the consumer.
+    /// </summary>
     public Parsec Parsec { get; private set; }
 
     // Auto-enabling debug mode until this is all stable.
@@ -16,6 +21,10 @@ public class ParsecUnityController : MonoBehaviour
     // TODO: This should contain something more abstract.
     public event Action<Parsec.ParsecGuest, UnityEngine.InputSystem.InputDevice> OnGuestConnected;
     public event Action<Parsec.ParsecGuest> OnGuestDisconnected;
+    // TODO: This is currently only used for the client to send their color on game start.
+    // Autoconverts in the incoming UTF-8 string into JSON, but does not encode anything about
+    // its type (its assumed to be a color right now).
+    public event Action<Parsec.ParsecGuest, string> OnReceiveUserData;
 
     private ParsecHostInput hostInput;
     private Texture2D screenshot;
@@ -76,6 +85,13 @@ public class ParsecUnityController : MonoBehaviour
                             break;
                     }
                 }
+                else if (hostEvent.type == Parsec.ParsecHostEventType.HOST_EVENT_USER_DATA)
+                {
+                    Log($"Received user data from {hostEvent.userData.guest.id}.");
+
+                    string json = Parsec.HostGetUserDataString(hostEvent.userData.key);
+                    OnReceiveUserData?.Invoke(hostEvent.userData.guest, json);
+                }
             }
         }
     }
@@ -130,6 +146,13 @@ public class ParsecUnityController : MonoBehaviour
         parsecGuestView = Instantiate(parsecGuestViewPrefab);
 
         StartCoroutine(ClientPollFrame());
+    }
+
+    public void ClientSendUserData(Color color)
+    {
+        string json = JsonUtility.ToJson(color);
+
+        Parsec.ClientSendUserData(0, json);
     }
 
     private IEnumerator ClientPollFrame()

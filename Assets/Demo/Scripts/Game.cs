@@ -22,6 +22,7 @@ public class Game : MonoBehaviour
         // players without knowing where they came from, but we'll be lazy here.
         parsecUnityController.OnGuestConnected += ParsecUnityController_OnGuestConnected;
         parsecUnityController.OnGuestDisconnected += ParsecUnityController_OnGuestDisconnected;
+        parsecUnityController.OnReceiveUserData += ParsecUnityController_OnReceiveUserData;
     }
 
     public void AddPlayer(int id, InputDevice device)
@@ -46,5 +47,11 @@ public class Game : MonoBehaviour
     private void ParsecUnityController_OnGuestDisconnected(ParsecGaming.Parsec.ParsecGuest guest)
     {
         Destroy(playersById[(int)guest.id]);
+    }
+
+    private void ParsecUnityController_OnReceiveUserData(ParsecGaming.Parsec.ParsecGuest guest, string jsonColor)
+    {
+        Color color = JsonUtility.FromJson<Color>(jsonColor);
+        SetPlayerColor((int)guest.id, color);
     }
 }

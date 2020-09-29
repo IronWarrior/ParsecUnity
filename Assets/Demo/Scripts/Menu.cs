@@ -1,8 +1,12 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
+    [SerializeField]
+    GameObject menuContainer;
+
     [SerializeField]
     Button hostButton;
 
@@ -14,6 +18,9 @@ public class Menu : MonoBehaviour
 
     [SerializeField]
     InputField peerIdInput;
+
+    [SerializeField]
+    Text statusText;
 
     [SerializeField]
     RGBPicker rgbPicker;
@@ -28,6 +35,8 @@ public class Menu : MonoBehaviour
     {
         hostButton.onClick.AddListener(Host);
         connectButton.onClick.AddListener(Connect);
+
+        statusText.gameObject.SetActive(false);
     }
 
     private void Host()
@@ -44,7 +53,27 @@ public class Menu : MonoBehaviour
 
     private void Connect()
     {
+        StartCoroutine(ConnectRoutine());
+    }
+
+    private IEnumerator ConnectRoutine()
+    {
+        menuContainer.gameObject.SetActive(false);
+        statusText.gameObject.SetActive(true);
+
         parsecController.Connect(sessionIdInput.text, peerIdInput.text);
+
+        ParsecGaming.Parsec.ParsecStatus status;
+
+        do
+        {
+            status = parsecController.Parsec.ClientGetStatus(out _);
+            statusText.text = $"<b>Status: </b>{status}";
+            yield return null;
+        } 
+        while (status != ParsecGaming.Parsec.ParsecStatus.PARSEC_OK);
+
+        parsecController.ClientSendUserData(rgbPicker.Color);
         parsecController.StartClientPollFrames();
 
         Destroy(gameObject);
