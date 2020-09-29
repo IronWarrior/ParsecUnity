@@ -1,7 +1,6 @@
 ﻿using ParsecGaming;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class ParsecGuestInput : MonoBehaviour
 {
@@ -70,7 +69,7 @@ public class ParsecGuestInput : MonoBehaviour
 
         if (gamepad != null)
         {
-            foreach (var kvp in ParsecInputSystemMapping.GamepadButtons(gamepad))
+            foreach (var kvp in ParsecInputSystemMapping.GamepadButtonsMap(gamepad))
             {
                 if (kvp.Value.wasPressedThisFrame || kvp.Value.wasReleasedThisFrame)
                 {

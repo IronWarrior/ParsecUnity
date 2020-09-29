@@ -1,7 +1,6 @@
 ﻿using ParsecGaming;
 using System;
 using System.Collections;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class ParsecUnityController : MonoBehaviour
@@ -19,7 +18,7 @@ public class ParsecUnityController : MonoBehaviour
     // TODO: Ideally the host and client code should be split into two separate modules.
     #region Host
     // TODO: This should contain something more abstract.
-    public event Action<Parsec.ParsecGuest, UnityEngine.InputSystem.InputDevice> OnGuestConnected;
+    public event Action<Parsec.ParsecGuest, InputDeviceCollection> OnGuestConnected;
     public event Action<Parsec.ParsecGuest> OnGuestDisconnected;
     // TODO: This is currently only used for the client to send their color on game start.
     // Autoconverts in the incoming UTF-8 string into JSON, but does not encode anything about
@@ -73,8 +72,8 @@ public class ParsecUnityController : MonoBehaviour
                         case Parsec.ParsecGuestState.GUEST_CONNECTED:
                             Log($"Guest ID {hostEvent.guestStateChange.guest.id} connected.");
 
-                            var device = hostInput.AddGuest(hostEvent.guestStateChange.guest);
-                            OnGuestConnected?.Invoke(hostEvent.guestStateChange.guest, device);
+                            var deviceCollection = hostInput.AddGuest(hostEvent.guestStateChange.guest);
+                            OnGuestConnected?.Invoke(hostEvent.guestStateChange.guest, deviceCollection);
                             break;
                         case Parsec.ParsecGuestState.GUEST_DISCONNECTED:
                             Log($"Guest ID {hostEvent.guestStateChange.guest.id} disconnected.");

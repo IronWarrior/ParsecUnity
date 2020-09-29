@@ -45,7 +45,12 @@ public class Menu : MonoBehaviour
         parsecController.StartHostStreamer();
 
         game.Initialize(parsecController);
-        game.AddPlayer(-1, null);
+        game.AddPlayer(-1);
+        // TODO: Add functionality so that, when the host is the only local player,
+        // they are able to automatically switch between devices. We cannot rely on
+        // PlayerInput auto switch, as it only works when there is a single player input
+        // instance (guests also have an instance).
+        game.UpdatePlayerInputDevices(-1, UnityEngine.InputSystem.Keyboard.current);
         game.SetPlayerColor(-1, rgbPicker.Color);
 
         Destroy(gameObject);

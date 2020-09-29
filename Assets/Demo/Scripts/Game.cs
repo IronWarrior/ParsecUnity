@@ -25,13 +25,10 @@ public class Game : MonoBehaviour
         parsecUnityController.OnReceiveUserData += ParsecUnityController_OnReceiveUserData;
     }
 
-    public void AddPlayer(int id, InputDevice device)
+    public void AddPlayer(int id)
     {
         GameObject player = Instantiate(playerPrefab, new Vector3(Random.Range(-3f, 3f), 0, Random.Range(-3f, 3f)), Quaternion.identity);
         playersById[id] = player;
-
-        if (device != null)
-            player.GetComponent<PlayerInput>().SwitchCurrentControlScheme(device);
     }
 
     public void SetPlayerColor(int id, Color color)
@@ -39,9 +36,15 @@ public class Game : MonoBehaviour
         playersById[id].GetComponent<Player>().SetColor(color);
     }
 
-    private void ParsecUnityController_OnGuestConnected(ParsecGaming.Parsec.ParsecGuest guest, InputDevice device)
+    public void UpdatePlayerInputDevices(int id, InputDevice device)
     {
-        AddPlayer((int)guest.id, device);
+        playersById[id].GetComponent<PlayerInput>().SwitchCurrentControlScheme(device);
+    }
+
+    private void ParsecUnityController_OnGuestConnected(ParsecGaming.Parsec.ParsecGuest guest, InputDeviceCollection deviceCollection)
+    {
+        AddPlayer((int)guest.id);
+        deviceCollection.OnUseDifferentDevice += (device) => UpdatePlayerInputDevices((int)guest.id, device);
     }
 
     private void ParsecUnityController_OnGuestDisconnected(ParsecGaming.Parsec.ParsecGuest guest)

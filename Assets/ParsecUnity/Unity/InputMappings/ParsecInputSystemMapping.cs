@@ -56,7 +56,11 @@ public static class ParsecInputSystemMapping
         { Parsec.ParsecKeycode.KEY_RCTRL, Key.RightCtrl }
     };
 
-    public static Dictionary<Parsec.ParsecGamepadButton, ButtonControl> GamepadButtons(Gamepad gamepad)
+    public static readonly Dictionary<Parsec.ParsecGamepadButton, ButtonControl> GamepadButtons = new Dictionary<Parsec.ParsecGamepadButton, ButtonControl>()
+    {
+    };
+
+    public static Dictionary<Parsec.ParsecGamepadButton, ButtonControl> GamepadButtonsMap(Gamepad gamepad)
     {
         return new Dictionary<Parsec.ParsecGamepadButton, ButtonControl>()
         {
@@ -80,5 +84,42 @@ public static class ParsecInputSystemMapping
             { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_GUIDE, gamepad.startButton },
             { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_BACK, gamepad.selectButton }
         };
+    }
+
+    public static ButtonControl ParsecToGamepadButton(Gamepad gamepad, Parsec.ParsecGamepadButton button)
+    {
+        switch (button)
+        {
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_A:
+                return gamepad.buttonSouth;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_B:
+                return gamepad.buttonEast;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_X:
+                return gamepad.buttonWest;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_Y:
+                return gamepad.buttonNorth;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_LSHOULDER:
+                return gamepad.leftShoulder;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_RSHOULDER:
+                return gamepad.rightShoulder;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_LSTICK:
+                return gamepad.leftStickButton;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_RSTICK:
+                return gamepad.rightStickButton;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_DPAD_UP:
+                return gamepad.dpad.up;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_DPAD_DOWN:
+                return gamepad.dpad.down;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_DPAD_LEFT:
+                return gamepad.dpad.left;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_DPAD_RIGHT:
+                return gamepad.dpad.right;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_GUIDE:
+                return gamepad.startButton;
+            case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_BACK:
+                return gamepad.selectButton;
+            default:
+                return null;
+        }
     }
 }
