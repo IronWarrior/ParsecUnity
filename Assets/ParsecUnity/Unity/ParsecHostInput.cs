@@ -64,6 +64,9 @@ public class ParsecHostInput : MonoBehaviour
                 case Parsec.ParsecMessageType.MESSAGE_MOUSE_BUTTON:
                     ParsecUnityController.Log($"Guest {guest.id} {(msg.mouseButton.pressed ? "pressed" : "released")} mouse button {msg.mouseButton} at {Time.time}");
                     break;
+                case Parsec.ParsecMessageType.MESSAGE_GAMEPAD_BUTTON:
+                    ParsecUnityController.Log($"Guest {guest.id} {(msg.gamepadButton.pressed ? "pressed" : "released")} gamepad button {msg.gamepadButton.button} on gamepad {msg.gamepadButton.id} at {Time.time}");
+                    break;
                 default:
                     break;
             }

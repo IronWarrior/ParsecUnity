@@ -1,6 +1,7 @@
 ﻿using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using ParsecGaming;
+using UnityEngine.InputSystem.Controls;
 
 public static class ParsecInputSystemMapping
 {
@@ -54,4 +55,30 @@ public static class ParsecInputSystemMapping
         { Parsec.ParsecKeycode.KEY_LCTRL, Key.LeftCtrl },
         { Parsec.ParsecKeycode.KEY_RCTRL, Key.RightCtrl }
     };
+
+    public static Dictionary<Parsec.ParsecGamepadButton, ButtonControl> GamepadButtons(Gamepad gamepad)
+    {
+        return new Dictionary<Parsec.ParsecGamepadButton, ButtonControl>()
+        {
+            // Ahh yes, the "A" button: https://images.pushsquare.com/a7c69ec3b5207/playstation-x-button-cross-xbox.original.jpg
+            // (Parsec seems to match an Xbox controller layout.)
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_A, gamepad.buttonSouth },
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_B, gamepad.buttonEast },
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_X, gamepad.buttonWest },
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_Y, gamepad.buttonNorth },
+
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_LSHOULDER, gamepad.leftShoulder },
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_RSHOULDER, gamepad.rightShoulder },
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_LSTICK, gamepad.leftStickButton },
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_RSTICK, gamepad.rightStickButton },
+
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_DPAD_UP, gamepad.dpad.up },
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_DPAD_DOWN, gamepad.dpad.down },
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_DPAD_LEFT, gamepad.dpad.left },
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_DPAD_RIGHT, gamepad.dpad.right },
+
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_GUIDE, gamepad.startButton },
+            { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_BACK, gamepad.selectButton }
+        };
+    }
 }

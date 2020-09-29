@@ -1,6 +1,7 @@
 ﻿using ParsecGaming;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class ParsecGuestInput : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class ParsecGuestInput : MonoBehaviour
     {
         // If no keyboard is plugged in, this will be null.
         var keyboard = Keyboard.current;
-        
+
         if (keyboard != null)
         {
             foreach (var kvp in ParsecInputSystemMapping.Keys)
@@ -62,6 +63,24 @@ public class ParsecGuestInput : MonoBehaviour
                 message.mouseMotion.y = deltaY;
 
                 parsec.ClientSendMessage(message);
+            }
+        }
+
+        var gamepad = Gamepad.current;
+
+        if (gamepad != null)
+        {
+            foreach (var kvp in ParsecInputSystemMapping.GamepadButtons(gamepad))
+            {
+                if (kvp.Value.wasPressedThisFrame || kvp.Value.wasReleasedThisFrame)
+                {
+                    var message = new Parsec.ParsecMessage { type = Parsec.ParsecMessageType.MESSAGE_GAMEPAD_BUTTON };
+
+                    message.gamepadButton.button = kvp.Key;
+                    message.gamepadButton.pressed = kvp.Value.wasPressedThisFrame;
+
+                    parsec.ClientSendMessage(message);
+                }
             }
         }
     }
