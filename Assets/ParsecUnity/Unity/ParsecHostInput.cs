@@ -49,26 +49,43 @@ public class ParsecHostInput : MonoBehaviour
     // sometimes the InputSystem does not correctly reset state.
     private void Update()
     {
+        var keyboardMessages = new Dictionary<uint, List<Parsec.ParsecMessage>>();
+
         while (parsec.HostPollInput(0u, out Parsec.ParsecGuest guest, out Parsec.ParsecMessage msg))
         {
             switch (msg.type)
             {
                 case Parsec.ParsecMessageType.MESSAGE_KEYBOARD:
-                    if (ParsecInputSystemMapping.Keys.TryGetValue(msg.keyboard.code, out Key key))
-                    {
-                        Keyboard keyboard = guests[guest.id];
+                        if (!keyboardMessages.ContainsKey(guest.id))
+                            keyboardMessages[guest.id] = new List<Parsec.ParsecMessage>();
 
-                        using (StateEvent.From(keyboard, out InputEventPtr eventPtr))
-                        {
-                            ParsecUnityController.Log($"Guest {guest.id} {(msg.keyboard.pressed ? "pressed" : "released")} key {key} at {Time.time}");
-
-                            keyboard[key].WriteValueIntoEvent<float>(msg.keyboard.pressed ? 1 : 0, eventPtr);
-                            InputSystem.QueueEvent(eventPtr);
-                        }
-                    }
+                        keyboardMessages[guest.id].Add(msg);
                     break;
                 default:
                     break;
+            }
+        }
+
+        // Unity's low level input event queuing system apparently does not like
+        // multiple events to be queued for a single device each input round,
+        // making it necessary to store all events per device ahead of time.
+        foreach (var kvp in keyboardMessages)
+        {
+            Keyboard keyboard = guests[kvp.Key];
+
+            using (StateEvent.From(keyboard, out InputEventPtr eventPtr))
+            {
+                foreach (var msg in kvp.Value)
+                {
+                    if (ParsecInputSystemMapping.Keys.TryGetValue(msg.keyboard.code, out Key key))
+                    {
+                        ParsecUnityController.Log($"Guest {kvp.Key} {(msg.keyboard.pressed ? "pressed" : "released")} key {key} at {Time.time}");
+
+                        keyboard[key].WriteValueIntoEvent<float>(msg.keyboard.pressed ? 1 : 0, eventPtr);                        
+                    }
+
+                    InputSystem.QueueEvent(eventPtr);
+                }
             }
         }
     }
