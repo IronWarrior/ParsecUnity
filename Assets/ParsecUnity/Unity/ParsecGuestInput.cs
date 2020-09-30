@@ -69,7 +69,7 @@ public class ParsecGuestInput : MonoBehaviour
 
         if (gamepad != null)
         {
-            foreach (var kvp in ParsecInputSystemMapping.GamepadButtonsMap(gamepad))
+            foreach (var kvp in ParsecInputSystemMapping.GamepadButtons(gamepad))
             {
                 if (kvp.Value.wasPressedThisFrame || kvp.Value.wasReleasedThisFrame)
                 {
@@ -80,6 +80,17 @@ public class ParsecGuestInput : MonoBehaviour
 
                     parsec.ClientSendMessage(message);
                 }
+            }
+
+            foreach (var kvp in ParsecInputSystemMapping.GamepadAxes(gamepad))
+            {
+                short axis = (short)(kvp.Value.ReadValue() * short.MaxValue);
+
+                var msg = new Parsec.ParsecMessage { type = Parsec.ParsecMessageType.MESSAGE_GAMEPAD_AXIS };
+                msg.gamepadAxis.axis = kvp.Key;
+                msg.gamepadAxis.value = axis;
+
+                parsec.ClientSendMessage(msg);
             }
         }
     }

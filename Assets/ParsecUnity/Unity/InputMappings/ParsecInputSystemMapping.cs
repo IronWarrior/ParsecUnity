@@ -56,11 +56,8 @@ public static class ParsecInputSystemMapping
         { Parsec.ParsecKeycode.KEY_RCTRL, Key.RightCtrl }
     };
 
-    public static readonly Dictionary<Parsec.ParsecGamepadButton, ButtonControl> GamepadButtons = new Dictionary<Parsec.ParsecGamepadButton, ButtonControl>()
-    {
-    };
-
-    public static Dictionary<Parsec.ParsecGamepadButton, ButtonControl> GamepadButtonsMap(Gamepad gamepad)
+    // TODO: Probably worth wrapping all this in a class that has a Gamepad injected.
+    public static Dictionary<Parsec.ParsecGamepadButton, ButtonControl> GamepadButtons(Gamepad gamepad)
     {
         return new Dictionary<Parsec.ParsecGamepadButton, ButtonControl>()
         {
@@ -83,6 +80,18 @@ public static class ParsecInputSystemMapping
 
             { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_GUIDE, gamepad.startButton },
             { Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_BACK, gamepad.selectButton }
+        };
+    }
+
+    public static Dictionary<Parsec.ParsecGamepadAxis, AxisControl> GamepadAxes(Gamepad gamepad)
+    {
+        return new Dictionary<Parsec.ParsecGamepadAxis, AxisControl>()
+        {
+            { Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_LX, gamepad.leftStick.x },
+            { Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_LY, gamepad.leftStick.y },
+
+            { Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_RX, gamepad.rightStick.x },
+            { Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_RY, gamepad.rightStick.y },
         };
     }
 
@@ -118,6 +127,23 @@ public static class ParsecInputSystemMapping
                 return gamepad.startButton;
             case Parsec.ParsecGamepadButton.GAMEPAD_BUTTON_BACK:
                 return gamepad.selectButton;
+            default:
+                return null;
+        }
+    }
+
+    public static AxisControl ParsecToGamepadAxis(Gamepad gamepad, Parsec.ParsecGamepadAxis axis)
+    {
+        switch (axis)
+        {
+            case Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_LX:
+                return gamepad.leftStick.x;
+            case Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_LY:
+                return gamepad.leftStick.y;
+            case Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_RX:
+                return gamepad.rightStick.x;
+            case Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_RY:
+                return gamepad.rightStick.y;
             default:
                 return null;
         }

@@ -48,7 +48,7 @@ public class ParsecHostInput : MonoBehaviour
     private void Update()
     {
         var keyboardMessages = new Dictionary<uint, List<Parsec.ParsecMessage>>();
-        var gamepadButtonMessages = new Dictionary<uint, List<Parsec.ParsecMessage>>();
+        var gamepadMessages = new Dictionary<uint, List<Parsec.ParsecMessage>>();
 
         while (parsec.HostPollInput(0u, out Parsec.ParsecGuest guest, out Parsec.ParsecMessage msg))
         {
@@ -64,10 +64,16 @@ public class ParsecHostInput : MonoBehaviour
                     ParsecUnityController.Log($"Guest {guest.id} {(msg.mouseButton.pressed ? "pressed" : "released")} mouse button {msg.mouseButton} at {Time.time}");
                     break;
                 case Parsec.ParsecMessageType.MESSAGE_GAMEPAD_BUTTON:
-                    if (!gamepadButtonMessages.ContainsKey(guest.id))
-                        gamepadButtonMessages[guest.id] = new List<Parsec.ParsecMessage>();
+                    if (!gamepadMessages.ContainsKey(guest.id))
+                        gamepadMessages[guest.id] = new List<Parsec.ParsecMessage>();
 
-                    gamepadButtonMessages[guest.id].Add(msg);
+                    gamepadMessages[guest.id].Add(msg);
+                    break;
+                case Parsec.ParsecMessageType.MESSAGE_GAMEPAD_AXIS:
+                    if (!gamepadMessages.ContainsKey(guest.id))
+                        gamepadMessages[guest.id] = new List<Parsec.ParsecMessage>();
+
+                    gamepadMessages[guest.id].Add(msg);
                     break;
                 default:
                     break;
@@ -96,14 +102,14 @@ public class ParsecHostInput : MonoBehaviour
                         ParsecUnityController.Log($"Guest {kvp.Key} {(msg.keyboard.pressed ? "pressed" : "released")} key {key} at {Time.time}");
 
                         keyboard[key].WriteValueIntoEvent<float>(msg.keyboard.pressed ? 1 : 0, eventPtr);                        
-                    }
-
-                    InputSystem.QueueEvent(eventPtr);
+                    }                    
                 }
+
+                InputSystem.QueueEvent(eventPtr);
             }
         }
 
-        foreach (var kvp in gamepadButtonMessages)
+        foreach (var kvp in gamepadMessages)
         {
             if (!guests[kvp.Key].Get(out Gamepad gamepad))
             {
@@ -114,20 +120,38 @@ public class ParsecHostInput : MonoBehaviour
             {
                 foreach (var msg in kvp.Value)
                 {
-                    var button = ParsecInputSystemMapping.ParsecToGamepadButton(gamepad, msg.gamepadButton.button);
-
-                    if (button != null)
+                    if (msg.type == Parsec.ParsecMessageType.MESSAGE_GAMEPAD_BUTTON)
                     {
-                        if (guests[kvp.Key].Use(gamepad))
-                            ParsecUnityController.Log($"Guest {kvp.Key} switched current device to gamepad {msg.gamepadButton.id} at {Time.time}");
+                        var button = ParsecInputSystemMapping.ParsecToGamepadButton(gamepad, msg.gamepadButton.button);
 
-                        ParsecUnityController.Log($"Guest {kvp.Key} {(msg.gamepadButton.pressed ? "pressed" : "released")} {button} on gamepad {msg.gamepadButton.id} at {Time.time}");
+                        if (button != null)
+                        {
+                            if (guests[kvp.Key].Use(gamepad))
+                                ParsecUnityController.Log($"Guest {kvp.Key} switched current device to gamepad {msg.gamepadButton.id} at {Time.time}");
 
-                        button.WriteValueIntoEvent<float>(msg.gamepadButton.pressed ? 1 : 0, eventPtr);
+                            ParsecUnityController.Log($"Guest {kvp.Key} {(msg.gamepadButton.pressed ? "pressed" : "released")} {button} on gamepad {msg.gamepadButton.id} at {Time.time}");
+
+                            button.WriteValueIntoEvent<float>(msg.gamepadButton.pressed ? 1 : 0, eventPtr);
+                        }                        
                     }
+                    else if (msg.type == Parsec.ParsecMessageType.MESSAGE_GAMEPAD_AXIS)
+                    {
+                        var axis = ParsecInputSystemMapping.ParsecToGamepadAxis(gamepad, msg.gamepadAxis.axis);
 
-                    InputSystem.QueueEvent(eventPtr);
+                        if (axis != null)
+                        {
+                            float value = (float)msg.gamepadAxis.value / short.MaxValue;
+
+                            // TODO: Set a constant for this value that makes sense to avoid deadzoned values switching devices.
+                            if (Mathf.Abs(value) > 0.4f && guests[kvp.Key].Use(gamepad))
+                                ParsecUnityController.Log($"Guest {kvp.Key} switched current device to gamepad {msg.gamepadButton.id} at {Time.time}");
+
+                            axis.WriteValueIntoEvent(value, eventPtr);
+                        }
+                    }
                 }
+
+                InputSystem.QueueEvent(eventPtr);
             }
         }
     }

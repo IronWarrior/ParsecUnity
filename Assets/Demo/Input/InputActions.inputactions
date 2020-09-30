@@ -73,7 +73,7 @@
                 {
                     "name": "",
                     "id": "af1e8329-a1c3-4a06-9c1a-731dab7992c0",
-                    "path": "<Gamepad>/rightStick",
+                    "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
