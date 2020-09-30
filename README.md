@@ -1,6 +1,6 @@
 :warning: **This project is a work-in-progress and is not production ready** :warning:
 
-This repository uses the [Parsec C# SDK](https://github.com/parsec-cloud/parsec-sdk) to allow hosting and joining Parsec sessions within Unity. The Parsec C# SDK provides interoperability with the [native Parsec SDK](https://parsecgaming.com/docs/sdk/). [Parsec](https://parsecgaming.com/) is an interaction video streaming application that is commonly used to play local multiplayer games over a network. This allows a developer to add networked multiplayer to their project without needing to write any netcode. **This repository is not affiliated with the Parsec team.**
+This repository uses the [Parsec C# SDK](https://github.com/parsec-cloud/parsec-sdk) to allow hosting and joining Parsec sessions within Unity. The Parsec C# SDK provides interoperability with the [native Parsec SDK](https://parsecgaming.com/docs/sdk/). [Parsec](https://parsecgaming.com/) is an interactive video streaming application that is commonly used to play local multiplayer games over a network. This allows a developer to add networked multiplayer to their project without needing to write any netcode. **This repository is not affiliated with the Parsec team.**
 
 ![Screenshot of both local and remote views of the demo game](https://i.imgur.com/TBphcwK.png)
 
