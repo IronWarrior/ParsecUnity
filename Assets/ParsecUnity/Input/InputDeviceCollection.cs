@@ -49,7 +49,12 @@ public class InputDeviceCollection
         }
     }
 
-    public T Add<T>() where T : InputDevice
+    /// <summary>
+    /// Creates a virtual input device of the provided type and adds it this collection.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public T CreateAndAdd<T>() where T : InputDevice
     {        
         T device = InputSystem.AddDevice<T>();
         devices.Add(device);

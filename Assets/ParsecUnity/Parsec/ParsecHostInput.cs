@@ -4,10 +4,6 @@ using ParsecGaming;
 using System.Collections.Generic;
 using UnityEngine.InputSystem.LowLevel;
 
-// TODO: It's overall probably not recommended to directly inject inputs
-// into the Unity Input System, as the app may require focus for the injected
-// inputs to be run. It's nice that this is a fully seamless way to architect it,
-// but this could be a critical problem for some apps.
 // TODO: The Input System-specific code should be moved to a different module. This
 // class would then only be responsible for polymorphically converting Parsec inputs
 // to the module's domain, and surfacing the converted inputs to the app.
@@ -87,7 +83,7 @@ public class ParsecHostInput : MonoBehaviour
         {
             if (!guests[kvp.Key].Get(out Keyboard keyboard))
             {
-                keyboard = guests[kvp.Key].Add<Keyboard>();
+                keyboard = guests[kvp.Key].CreateAndAdd<Keyboard>();
             }
 
             using (StateEvent.From(keyboard, out InputEventPtr eventPtr))
@@ -110,7 +106,7 @@ public class ParsecHostInput : MonoBehaviour
         {
             if (!guests[kvp.Key].Get(out Gamepad gamepad))
             {
-                gamepad = guests[kvp.Key].Add<Gamepad>();
+                gamepad = guests[kvp.Key].CreateAndAdd<Gamepad>();
             }
 
             using (StateEvent.From(gamepad, out InputEventPtr eventPtr))
