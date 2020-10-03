@@ -53,7 +53,12 @@ public static class ParsecInputSystemMapping
         { Parsec.ParsecKeycode.KEY_LALT, Key.LeftAlt },
         { Parsec.ParsecKeycode.KEY_RALT, Key.RightAlt },
         { Parsec.ParsecKeycode.KEY_LCTRL, Key.LeftCtrl },
-        { Parsec.ParsecKeycode.KEY_RCTRL, Key.RightCtrl }
+        { Parsec.ParsecKeycode.KEY_RCTRL, Key.RightCtrl },
+
+        { Parsec.ParsecKeycode.KEY_UP, Key.UpArrow },
+        { Parsec.ParsecKeycode.KEY_DOWN, Key.DownArrow },
+        { Parsec.ParsecKeycode.KEY_RIGHT, Key.RightArrow },
+        { Parsec.ParsecKeycode.KEY_LEFT, Key.LeftArrow }
     };
 
     // TODO: Probably worth wrapping all this in a class that has a Gamepad injected.
