@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using ParsecGaming;
 using System.Collections.Generic;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.InputSystem.Users;
 
 // TODO: It's overall probably not recommended to directly inject inputs
 // into the Unity Input System, as the app may require focus for the injected
