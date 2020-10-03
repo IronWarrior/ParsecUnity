@@ -20,6 +20,19 @@ public class InputDeviceCollection
         ++InputUser.listenForUnpairedDeviceActivity;
     }
 
+    ~InputDeviceCollection()
+    {
+        InputUser.onUnpairedDeviceUsed -= OnUnpairedDeviceUsed;
+    }
+
+    public InputDeviceCollection(params InputDevice[] devices) : this()
+    {
+        for (int i = 0; i < devices.Length; i++)
+        {
+            this.devices.Add(devices[i]);
+        }
+    }
+
     private void OnUnpairedDeviceUsed(InputControl control, InputEventPtr eventPtr)
     {
         int indexOfDevice = devices.IndexOf(control.device);
@@ -63,8 +76,7 @@ public class InputDeviceCollection
     {
         foreach (var device in devices)
         {
-            InputSystem.RemoveDevice(device);
-            InputUser.onUnpairedDeviceUsed -= OnUnpairedDeviceUsed;
+            InputSystem.RemoveDevice(device);            
         }
     }
 }

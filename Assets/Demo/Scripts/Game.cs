@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
 public class Game : MonoBehaviour
@@ -25,9 +24,11 @@ public class Game : MonoBehaviour
         parsecUnityController.OnReceiveUserData += ParsecUnityController_OnReceiveUserData;
     }
 
-    public void AddPlayer(int id)
+    public void AddPlayer(int id, InputDeviceCollection deviceCollection)
     {
         GameObject player = Instantiate(playerPrefab, new Vector3(Random.Range(-3f, 3f), 0, Random.Range(-3f, 3f)), Quaternion.identity);
+        player.GetComponent<PlayerInputController>().Initialize(deviceCollection);
+
         playersById[id] = player;
     }
 
@@ -36,30 +37,9 @@ public class Game : MonoBehaviour
         playersById[id].GetComponent<Player>().SetColor(color);
     }
 
-    public void UpdatePlayerInputDevices(int id, params InputDevice[] devices)
-    {
-        Debug.Log($"Updating devices for {id} in order {string.Join<object>(",", devices)}");
-
-        var playerInput = playersById[id].GetComponent<PlayerInput>();
-
-        if (InputControlScheme.FindControlSchemeForDevices(devices, playerInput.actions.controlSchemes,
-                    out _, out var matchResult, mustIncludeDevice: devices[0]))
-        {
-            try
-            {
-                playerInput.SwitchCurrentControlScheme(matchResult.devices.ToArray());
-            }
-            finally
-            {
-                matchResult.Dispose();
-            }
-        }
-    }
-
     private void ParsecUnityController_OnGuestConnected(ParsecGaming.Parsec.ParsecGuest guest, InputDeviceCollection deviceCollection)
     {
-        AddPlayer((int)guest.id);
-        deviceCollection.OnUseUnpairedDevice += () => UpdatePlayerInputDevices((int)guest.id, deviceCollection.Devices);
+        AddPlayer((int)guest.id, deviceCollection);
     }
 
     private void ParsecUnityController_OnGuestDisconnected(ParsecGaming.Parsec.ParsecGuest guest)
