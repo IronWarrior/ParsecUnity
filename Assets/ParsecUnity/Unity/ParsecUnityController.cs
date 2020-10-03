@@ -13,7 +13,7 @@ public class ParsecUnityController : MonoBehaviour
 
     // Auto-enabling debug mode until this is all stable.
     // Static variables are so sinful :(
-    public static bool EnableDebug { private get; set; } = true;
+    public static bool EnableDebug { private get; set; } = false;
 
     // TODO: Ideally the host and client code should be split into two separate modules.
     #region Host

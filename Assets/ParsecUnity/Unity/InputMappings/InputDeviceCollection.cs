@@ -1,25 +1,45 @@
 ﻿using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
+using UnityEngine.InputSystem.LowLevel;
 using System.Collections.Generic;
 
 public class InputDeviceCollection
 {
-    public event System.Action<InputDevice> OnUseDifferentDevice;
-
+    public event System.Action OnUseUnpairedDevice;
     public InputDevice[] Devices => devices.ToArray();
-    private readonly List<InputDevice> devices;
 
-    private InputDevice mostRecentlyUsedDevice;
+    private readonly List<InputDevice> devices;
 
     public InputDeviceCollection()
     {
         devices = new List<InputDevice>();
+
+        InputUser.onUnpairedDeviceUsed += OnUnpairedDeviceUsed;
+        // TODO: Find out why this is an int and not a bool. Line taken from
+        // PlayerInput.cs.
+        ++InputUser.listenForUnpairedDeviceActivity;
+    }
+
+    private void OnUnpairedDeviceUsed(InputControl control, InputEventPtr eventPtr)
+    {
+        int indexOfDevice = devices.IndexOf(control.device);
+
+        // Move the device to the front of the list so that it has priority
+        // if the list is passed into a control scheme.
+        if (indexOfDevice >= 0)
+        {
+            InputDevice temp = devices[0];
+            devices[0] = control.device;
+            devices[indexOfDevice] = temp;
+
+            OnUseUnpairedDevice?.Invoke();
+        }
     }
 
     public T Add<T>() where T : InputDevice
     {        
         T device = InputSystem.AddDevice<T>();
         devices.Add(device);
-        Use(device);
 
         return device;
     }
@@ -39,31 +59,12 @@ public class InputDeviceCollection
         return false;
     }
 
-    /// <summary>
-    /// Call this when a device is used. This allow this object to notify
-    /// listeners of <see cref="OnUseDifferentDevice"/> when the "current"
-    /// device has changed.
-    /// </summary>
-    /// <param name="device"></param>
-    /// <returns>True if the current device has now changed.</returns>
-    public bool Use(InputDevice device)
-    {
-        if (devices.Contains(device) && mostRecentlyUsedDevice != device)
-        {
-            mostRecentlyUsedDevice = device;
-            OnUseDifferentDevice?.Invoke(device);
-
-            return true;
-        }
-
-        return false;
-    }
-
     public void Free()
     {
         foreach (var device in devices)
         {
             InputSystem.RemoveDevice(device);
+            InputUser.onUnpairedDeviceUsed -= OnUnpairedDeviceUsed;
         }
     }
 }

@@ -97,9 +97,6 @@ public class ParsecHostInput : MonoBehaviour
                 {
                     if (ParsecInputSystemMapping.Keys.TryGetValue(msg.keyboard.code, out Key key))
                     {
-                        if (guests[kvp.Key].Use(keyboard))
-                            ParsecUnityController.Log($"Guest {kvp.Key} switched current device to keyboard at {Time.time}");
-
                         ParsecUnityController.Log($"Guest {kvp.Key} {(msg.keyboard.pressed ? "pressed" : "released")} key {key} at {Time.time}");
 
                         keyboard[key].WriteValueIntoEvent<float>(msg.keyboard.pressed ? 1 : 0, eventPtr);                        
@@ -126,10 +123,7 @@ public class ParsecHostInput : MonoBehaviour
                         var button = ParsecInputSystemMapping.ParsecToGamepadButton(gamepad, msg.gamepadButton.button);
 
                         if (button != null)
-                        {
-                            if (guests[kvp.Key].Use(gamepad))
-                                ParsecUnityController.Log($"Guest {kvp.Key} switched current device to gamepad {msg.gamepadButton.id} at {Time.time}");
-
+                        {                            
                             ParsecUnityController.Log($"Guest {kvp.Key} {(msg.gamepadButton.pressed ? "pressed" : "released")} {button} on gamepad {msg.gamepadButton.id} at {Time.time}");
 
                             button.WriteValueIntoEvent<float>(msg.gamepadButton.pressed ? 1 : 0, eventPtr);
@@ -142,11 +136,7 @@ public class ParsecHostInput : MonoBehaviour
                         if (axis != null)
                         {
                             float value = (float)msg.gamepadAxis.value / short.MaxValue;
-
-                            // TODO: Set a constant for this value that makes sense to avoid deadzoned values switching devices.
-                            if (Mathf.Abs(value) > 0.4f && guests[kvp.Key].Use(gamepad))
-                                ParsecUnityController.Log($"Guest {kvp.Key} switched current device to gamepad {msg.gamepadButton.id} at {Time.time}");
-
+                            
                             axis.WriteValueIntoEvent(value, eventPtr);
                         }
                     }

@@ -36,15 +36,30 @@ public class Game : MonoBehaviour
         playersById[id].GetComponent<Player>().SetColor(color);
     }
 
-    public void UpdatePlayerInputDevices(int id, InputDevice device)
+    public void UpdatePlayerInputDevices(int id, params InputDevice[] devices)
     {
-        playersById[id].GetComponent<PlayerInput>().SwitchCurrentControlScheme(device);
+        Debug.Log($"Updating devices for {id} in order {string.Join<object>(",", devices)}");
+
+        var playerInput = playersById[id].GetComponent<PlayerInput>();
+
+        if (InputControlScheme.FindControlSchemeForDevices(devices, playerInput.actions.controlSchemes,
+                    out _, out var matchResult, mustIncludeDevice: devices[0]))
+        {
+            try
+            {
+                playerInput.SwitchCurrentControlScheme(matchResult.devices.ToArray());
+            }
+            finally
+            {
+                matchResult.Dispose();
+            }
+        }
     }
 
     private void ParsecUnityController_OnGuestConnected(ParsecGaming.Parsec.ParsecGuest guest, InputDeviceCollection deviceCollection)
     {
         AddPlayer((int)guest.id);
-        deviceCollection.OnUseDifferentDevice += (device) => UpdatePlayerInputDevices((int)guest.id, device);
+        deviceCollection.OnUseUnpairedDevice += () => UpdatePlayerInputDevices((int)guest.id, deviceCollection.Devices);
     }
 
     private void ParsecUnityController_OnGuestDisconnected(ParsecGaming.Parsec.ParsecGuest guest)
