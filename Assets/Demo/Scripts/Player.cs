@@ -46,6 +46,7 @@ public class Player : MonoBehaviour
     {
         Vector2 moveInput = playerInput.actions["Move"].ReadValue<Vector2>();
         Vector2 lookDirection = playerInput.actions["LookDirection"].ReadValue<Vector2>();
+        Vector2 lookTarget = playerInput.actions["LookTarget"].ReadValue<Vector2>();
 
         Vector3 worldMoveInput = Vector3.ClampMagnitude(new Vector3(moveInput.x, 0, moveInput.y), 1);
         Vector3 worldLookDirection = new Vector3(lookDirection.x, 0, lookDirection.y);
@@ -59,6 +60,21 @@ public class Player : MonoBehaviour
 
         if (lookDirection != Vector2.zero)
             turret.rotation = Quaternion.RotateTowards(turret.rotation, Quaternion.LookRotation(worldLookDirection), turnSpeed * Time.deltaTime);
+
+        if (lookTarget != Vector2.zero)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(lookTarget);
+            Plane groundPlane = new Plane(Vector3.up, Vector3.zero);
+
+            if (groundPlane.Raycast(ray, out float distance))
+            {
+                Vector3 point = ray.GetPoint(distance);
+                Vector3 to = point - turret.position;
+                to.y = 0;
+
+                turret.rotation = Quaternion.RotateTowards(turret.rotation, Quaternion.LookRotation(to), turnSpeed * Time.deltaTime);
+            }
+        }
     }
 
     public void SetColor(Color color)

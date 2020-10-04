@@ -39,11 +39,11 @@ public class ParsecHostInput : MonoBehaviour
 
     // TODO: This should be applied before all updates, or whenever
     // input normally is applied (based on the InputSystem configuration).
-    // TODO: There's a bug where although a press and release are recorded,
-    // sometimes the InputSystem does not correctly reset state.
     private void Update()
     {
+        // TODO: Probably don't need to allocate a new set of dictionaries every frame.
         var keyboardMessages = new Dictionary<uint, List<Parsec.ParsecMessage>>();
+        var mouseMessages = new Dictionary<uint, List<Parsec.ParsecMessage>>();
         var gamepadMessages = new Dictionary<uint, List<Parsec.ParsecMessage>>();
 
         while (parsec.HostPollInput(0u, out Parsec.ParsecGuest guest, out Parsec.ParsecMessage msg))
@@ -57,7 +57,16 @@ public class ParsecHostInput : MonoBehaviour
                     keyboardMessages[guest.id].Add(msg);
                     break;
                 case Parsec.ParsecMessageType.MESSAGE_MOUSE_BUTTON:
-                    ParsecUnityController.Log($"Guest {guest.id} {(msg.mouseButton.pressed ? "pressed" : "released")} mouse button {msg.mouseButton} at {Time.time}");
+                    if (!mouseMessages.ContainsKey(guest.id))
+                        mouseMessages[guest.id] = new List<Parsec.ParsecMessage>();
+
+                    mouseMessages[guest.id].Add(msg); 
+                    break;
+                case Parsec.ParsecMessageType.MESSAGE_MOUSE_MOTION:
+                    if (!mouseMessages.ContainsKey(guest.id))
+                        mouseMessages[guest.id] = new List<Parsec.ParsecMessage>();
+
+                    mouseMessages[guest.id].Add(msg);
                     break;
                 case Parsec.ParsecMessageType.MESSAGE_GAMEPAD_BUTTON:
                     if (!gamepadMessages.ContainsKey(guest.id))
@@ -96,6 +105,32 @@ public class ParsecHostInput : MonoBehaviour
 
                         keyboard[key].WriteValueIntoEvent<float>(msg.keyboard.pressed ? 1 : 0, eventPtr);                        
                     }                    
+                }
+
+                InputSystem.QueueEvent(eventPtr);
+            }
+        }
+
+        foreach (var kvp in mouseMessages)
+        {
+            if (!guests[kvp.Key].Get(out Mouse mouse))
+            {
+                mouse = guests[kvp.Key].CreateAndAdd<Mouse>();
+            }
+
+            using (StateEvent.From(mouse, out InputEventPtr eventPtr))
+            {
+                foreach (var msg in kvp.Value)
+                {
+                    if (msg.type == Parsec.ParsecMessageType.MESSAGE_MOUSE_BUTTON)
+                    {
+                        mouse.leftButton.WriteValueIntoEvent<float>(msg.mouseButton.pressed ? 1 : 0, eventPtr);
+                    }
+                    else if (msg.type == Parsec.ParsecMessageType.MESSAGE_MOUSE_MOTION && msg.mouseMotion.relative == false)
+                    {
+                        // TODO: Logging levels for very low priority debugs, like mouse motion or position.
+                        // ParsecUnityController.Log($"Guest {kvp.Key} mouse position is at {msg.mouseMotion.x}, {msg.mouseMotion.y} at {Time.time}");
+                    }
                 }
 
                 InputSystem.QueueEvent(eventPtr);

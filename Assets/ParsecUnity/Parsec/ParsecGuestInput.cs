@@ -32,7 +32,6 @@ public class ParsecGuestInput : MonoBehaviour
             }
         }
 
-        // TODO: Mouse button input is currently not being received on the host.
         // If no mouse is plugged in, this will be null.
         var mouse = Mouse.current;
 
@@ -63,6 +62,17 @@ public class ParsecGuestInput : MonoBehaviour
 
                 parsec.ClientSendMessage(message);
             }
+
+            int posX = (int)mouse.position.x.ReadValue();
+            int posY = (int)mouse.position.y.ReadValue();
+
+            var positionMessage = new Parsec.ParsecMessage { type = Parsec.ParsecMessageType.MESSAGE_MOUSE_MOTION };
+
+            positionMessage.mouseMotion.relative = false;
+            positionMessage.mouseMotion.x = posX;
+            positionMessage.mouseMotion.y = posY;
+
+            parsec.ClientSendMessage(positionMessage);
         }
 
         var gamepad = Gamepad.current;

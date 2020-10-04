@@ -11,9 +11,9 @@ public class ParsecUnityController : MonoBehaviour
     /// </summary>
     public Parsec Parsec { get; private set; }
 
-    // Auto-enabling debug mode until this is all stable.
+    // Manually toggling this on and off until better debugging tools are made.
     // Static variables are so sinful :(
-    public static bool EnableDebug { private get; set; } = false;
+    public static bool EnableDebug { private get; set; } = true;
 
     // TODO: Ideally the host and client code should be split into two separate modules.
     #region Host
@@ -134,6 +134,9 @@ public class ParsecUnityController : MonoBehaviour
         Log($"Connecting client: {status}");
 
         gameObject.AddComponent<ParsecGuestInput>().Initialize(Parsec);
+
+        // TODO: This should be called whenever the window changes size.
+        Parsec.ClientSetDimensions(0, (uint)Screen.width, (uint)Screen.height, 1);
     }
 
     /// <summary>
