@@ -2,6 +2,7 @@
 using UnityEngine.InputSystem.Users;
 using UnityEngine.InputSystem.LowLevel;
 using System.Collections.Generic;
+using UnityEngine.InputSystem.Controls;
 
 public class InputDeviceCollection
 {
@@ -35,6 +36,11 @@ public class InputDeviceCollection
 
     private void OnUnpairedDeviceUsed(InputControl control, InputEventPtr eventPtr)
     {
+        // Ignore anything other than button controls (to avoid small mouse movements,
+        // or mouse position updates switching schemes).
+        if (!(control is ButtonControl))
+            return;
+
         int indexOfDevice = devices.IndexOf(control.device);
 
         // Move the device to the front of the list so that it has priority

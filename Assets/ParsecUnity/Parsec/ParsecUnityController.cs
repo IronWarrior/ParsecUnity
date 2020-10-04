@@ -135,8 +135,8 @@ public class ParsecUnityController : MonoBehaviour
 
         gameObject.AddComponent<ParsecGuestInput>().Initialize(Parsec);
 
-        // TODO: This should be called whenever the window changes size.
-        Parsec.ClientSetDimensions(0, (uint)Screen.width, (uint)Screen.height, 1);
+        // TODO: This should probably start a coroutine to monitor the connection attempt,
+        // firing appropriate events on status change/success/failure.
     }
 
     /// <summary>
@@ -146,6 +146,9 @@ public class ParsecUnityController : MonoBehaviour
     {
         parsecFrameDecoder = new ParsecFrameDecoder();
         parsecGuestView = Instantiate(parsecGuestViewPrefab);
+
+        // TODO: This should be called whenever the window changes size.
+        Parsec.ClientSetDimensions(0, (uint)Screen.width, (uint)Screen.height, 1);
 
         StartCoroutine(ClientPollFrame());
     }

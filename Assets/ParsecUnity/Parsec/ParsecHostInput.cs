@@ -126,10 +126,21 @@ public class ParsecHostInput : MonoBehaviour
                     {
                         mouse.leftButton.WriteValueIntoEvent<float>(msg.mouseButton.pressed ? 1 : 0, eventPtr);
                     }
-                    else if (msg.type == Parsec.ParsecMessageType.MESSAGE_MOUSE_MOTION && msg.mouseMotion.relative == false)
+                    else if (msg.type == Parsec.ParsecMessageType.MESSAGE_MOUSE_MOTION && !msg.mouseMotion.relative)
                     {
                         // TODO: Logging levels for very low priority debugs, like mouse motion or position.
                         // ParsecUnityController.Log($"Guest {kvp.Key} mouse position is at {msg.mouseMotion.x}, {msg.mouseMotion.y} at {Time.time}");
+
+                        mouse.position.x.WriteValueIntoEvent<float>(msg.mouseMotion.x, eventPtr);
+                        mouse.position.y.WriteValueIntoEvent<float>(msg.mouseMotion.y, eventPtr);
+                    }
+                    else if (msg.type == Parsec.ParsecMessageType.MESSAGE_MOUSE_MOTION && msg.mouseMotion.relative)
+                    {
+                        // TODO: Logging levels for very low priority debugs, like mouse motion or position.
+                        // ParsecUnityController.Log($"Guest {kvp.Key} mouse delta was {msg.mouseMotion.x}, {msg.mouseMotion.y} at {Time.time}");
+
+                        mouse.delta.x.WriteValueIntoEvent<float>(msg.mouseMotion.x, eventPtr);
+                        mouse.delta.y.WriteValueIntoEvent<float>(msg.mouseMotion.y, eventPtr);
                     }
                 }
 
