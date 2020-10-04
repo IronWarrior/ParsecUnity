@@ -129,20 +129,9 @@
                 },
                 {
                     "name": "",
-                    "id": "ce566cfd-1e67-4e42-8511-863c35e24732",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "MouseKeyboard",
-                    "action": "Fire",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "69528bb0-87c1-41c2-908f-69d86bdf514a",
-                    "path": "<Gamepad>/rightShoulder",
-                    "interactions": "",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "Press(pressPoint=0.9)",
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Fire",

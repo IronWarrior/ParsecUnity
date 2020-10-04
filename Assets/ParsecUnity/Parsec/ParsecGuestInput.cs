@@ -37,14 +37,17 @@ public class ParsecGuestInput : MonoBehaviour
 
         if (mouse != null)
         {
-            if (mouse.leftButton.wasPressedThisFrame || mouse.leftButton.wasReleasedThisFrame)
+            foreach (var kvp in ParsecInputSystemMapping.MouseButtons(mouse))
             {
-                var message = new Parsec.ParsecMessage { type = Parsec.ParsecMessageType.MESSAGE_MOUSE_BUTTON };
+                if (kvp.Value.wasPressedThisFrame || kvp.Value.wasReleasedThisFrame)
+                {
+                    var message = new Parsec.ParsecMessage { type = Parsec.ParsecMessageType.MESSAGE_MOUSE_BUTTON };
 
-                message.mouseButton.button = Parsec.ParsecMouseButton.MOUSE_L;
-                message.mouseButton.pressed = mouse.leftButton.wasPressedThisFrame;
+                    message.mouseButton.button = kvp.Key;
+                    message.mouseButton.pressed = kvp.Value.wasPressedThisFrame;
 
-                parsec.ClientSendMessage(message);
+                    parsec.ClientSendMessage(message);
+                }
             }
 
             // Unity stores the deltas as floats, but they are always

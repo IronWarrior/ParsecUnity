@@ -61,6 +61,31 @@ public static class ParsecInputSystemMapping
         { Parsec.ParsecKeycode.KEY_LEFT, Key.LeftArrow }
     };
 
+    public static Dictionary<Parsec.ParsecMouseButton, ButtonControl> MouseButtons(Mouse mouse)
+    {
+        return new Dictionary<Parsec.ParsecMouseButton, ButtonControl>()
+        {
+            { Parsec.ParsecMouseButton.MOUSE_L, mouse.leftButton },
+            { Parsec.ParsecMouseButton.MOUSE_R, mouse.rightButton },
+            { Parsec.ParsecMouseButton.MOUSE_MIDDLE, mouse.middleButton }
+        };
+    }
+
+    public static ButtonControl ParsecToMouseButton(Mouse mouse, Parsec.ParsecMouseButton button)
+    {
+        switch (button)
+        {
+            case Parsec.ParsecMouseButton.MOUSE_L:
+                return mouse.leftButton;
+            case Parsec.ParsecMouseButton.MOUSE_R:
+                return mouse.rightButton;
+            case Parsec.ParsecMouseButton.MOUSE_MIDDLE:
+                return mouse.middleButton;
+            default:
+                return null;
+        }
+    }
+
     // TODO: Probably worth wrapping all this in a class that has a Gamepad injected.
     public static Dictionary<Parsec.ParsecGamepadButton, ButtonControl> GamepadButtons(Gamepad gamepad)
     {
@@ -97,6 +122,9 @@ public static class ParsecInputSystemMapping
 
             { Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_RX, gamepad.rightStick.x },
             { Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_RY, gamepad.rightStick.y },
+
+            { Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_TRIGGERL, gamepad.leftTrigger },
+            { Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_TRIGGERR, gamepad.rightTrigger }
         };
     }
 
@@ -149,6 +177,10 @@ public static class ParsecInputSystemMapping
                 return gamepad.rightStick.x;
             case Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_RY:
                 return gamepad.rightStick.y;
+            case Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_TRIGGERL:
+                return gamepad.leftTrigger;
+            case Parsec.ParsecGamepadAxis.GAMEPAD_AXIS_TRIGGERR:
+                return gamepad.rightTrigger;
             default:
                 return null;
         }

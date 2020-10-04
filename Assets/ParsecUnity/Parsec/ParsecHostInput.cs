@@ -124,7 +124,14 @@ public class ParsecHostInput : MonoBehaviour
                 {
                     if (msg.type == Parsec.ParsecMessageType.MESSAGE_MOUSE_BUTTON)
                     {
-                        mouse.leftButton.WriteValueIntoEvent<float>(msg.mouseButton.pressed ? 1 : 0, eventPtr);
+                        var button = ParsecInputSystemMapping.ParsecToMouseButton(mouse, msg.mouseButton.button);
+
+                        if (button != null)
+                        {
+                            ParsecUnityController.Log($"Guest {kvp.Key} {(msg.mouseButton.pressed ? "pressed" : "released")} {button} on mouse at {Time.time}");
+
+                            button.WriteValueIntoEvent<float>(msg.mouseButton.pressed ? 1 : 0, eventPtr);
+                        }
                     }
                     else if (msg.type == Parsec.ParsecMessageType.MESSAGE_MOUSE_MOTION && !msg.mouseMotion.relative)
                     {
