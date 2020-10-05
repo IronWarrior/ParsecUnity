@@ -147,9 +147,7 @@ public class ParsecUnityController : MonoBehaviour
         parsecFrameDecoder = new ParsecFrameDecoder();
         parsecGuestView = Instantiate(parsecGuestViewPrefab);
 
-        // TODO: This should be called whenever the window changes size.
-        Parsec.ClientSetDimensions(0, (uint)Screen.width, (uint)Screen.height, 1);
-
+        StartCoroutine(ClientMonitorScreenSize());
         StartCoroutine(ClientPollFrame());
     }
 
@@ -158,6 +156,24 @@ public class ParsecUnityController : MonoBehaviour
         string json = JsonUtility.ToJson(color);
 
         Parsec.ClientSendUserData(0, json);
+    }
+
+    private int currentScreenWidth, currentScreenHeight;
+
+    private IEnumerator ClientMonitorScreenSize()
+    {
+        while (true)
+        {
+            yield return null;
+
+            if (Screen.width != currentScreenWidth || Screen.height != currentScreenHeight)
+            {
+                currentScreenWidth = Screen.width;
+                currentScreenHeight = Screen.height;
+
+                Parsec.ClientSetDimensions(0, (uint)currentScreenWidth, (uint)currentScreenHeight, 1);
+            }
+        }
     }
 
     private IEnumerator ClientPollFrame()
