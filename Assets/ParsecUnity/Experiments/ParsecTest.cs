@@ -5,6 +5,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using System.Threading;
 
 public class ParsecTest : MonoBehaviour
 {
@@ -136,7 +137,38 @@ public class ParsecTest : MonoBehaviour
 
         gameObject.AddComponent<ParsecGuestInput>().Initialize(parsec);
 
+        #region Audio
         pcmData = new Queue<short[]>();
+
+        AudioClip clip = AudioClip.Create("ParsecInput", 960, 2, 48000, true, OnAudioRead, OnAudioSetPosition);
+        AudioSource source = GetComponent<AudioSource>();
+        source.clip = clip;
+        source.loop = true;
+        source.Play();
+
+        Thread pollThread = new Thread(() => PollAudio());
+        pollThread.Start();
+        #endregion
+    }
+
+    public int position = 0;
+
+    void OnAudioSetPosition(int newPosition)
+    {
+        position = newPosition;
+    }
+
+    private void OnAudioRead(float[] data)
+    {
+        if (pcmData.Count > 0)
+        {
+            var pcm = pcmData.Dequeue();
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                data[i] = (float)pcm[i] / short.MaxValue;
+            }
+        }
     }
 
     private void Update()
@@ -235,21 +267,12 @@ public class ParsecTest : MonoBehaviour
         Debug.Log($"Audio received with frames {frames}");
     }
 
-    private void OnAudioFilterRead(float[] data, int channels)
+    private void PollAudio()
     {
-        if (role == Role.Guest)
+        while (true)
         {
             parsec.ClientPollAudio(ClientReceiveAudio, 0u);
-
-            if (pcmData.Count > 0)
-            {
-                short[] pcm = pcmData.Dequeue();
-
-                for (int i = 0; i < pcm.Length; i++)
-                {
-                    data[i] = (float)pcm[i] / short.MaxValue;
-                }
-            }
+            Thread.Sleep(10);
         }
     }
     #endregion
