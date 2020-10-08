@@ -3,6 +3,8 @@ using ParsecGaming;
 using System;
 using System.Collections;
 using UnityEngine.UI;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 public class ParsecTest : MonoBehaviour
 {
@@ -73,7 +75,9 @@ public class ParsecTest : MonoBehaviour
     private void OnApplicationQuit()
     {
         if (parsec != null)
+        {
             parsec.ParsecDestroy();
+        }
     }
 
     private void Host()
@@ -131,6 +135,8 @@ public class ParsecTest : MonoBehaviour
         tryCreateTextureToggle.gameObject.SetActive(true);
 
         gameObject.AddComponent<ParsecGuestInput>().Initialize(parsec);
+
+        pcmData = new Queue<short[]>();
     }
 
     private void Update()
@@ -212,55 +218,39 @@ public class ParsecTest : MonoBehaviour
 
     private void SubmitAudioInternal(float[] data)
     {
-        parsec.HostSubmitAudio(sampleRate, data, (uint)(data.Length / 2));
+        uint frames = (uint)(data.Length / 2);
+        parsec.HostSubmitAudio(sampleRate, data, frames);
 
-        //if (role == Role.Host)
-        //{
-        //    dataLength = Mathf.Max(dataLength, data.Length);
-
-        //    framePCMData.Add(data);
-
-        //    if (framePCMData.Count >= audioCount)
-        //    {
-        //        float[] combinedData = new float[dataLength];
-
-        //        for (int i = 0; i < combinedData.Length; i++)
-        //        {
-        //            float pcm = 0;
-        //            int count = 0;
-
-        //            for (int j = 0; j < framePCMData.Count; j++)
-        //            {
-        //                if (i < framePCMData[j].Length)
-        //                {
-        //                    pcm += framePCMData[j][i];
-        //                    count++;
-        //                }
-        //            }
-
-        //            combinedData[i] = pcm / count;
-        //        }
-
-        //        parsec.HostSubmitAudio(sampleRate, combinedData, (uint)(combinedData.Length / 2));
-        //        dataLength = 0;
-        //        framePCMData.Clear();
-        //    }
-        //}
+        Debug.Log($"Submitting audio at rate {sampleRate} for {frames} frames.");
     }
 
-    private void ClientReceiveAudio(short[] pcm, uint frames, IntPtr opaque)
+    private Queue<short[]> pcmData;
+
+    private void ClientReceiveAudio(IntPtr pcm, uint frames, IntPtr opaque)
     {
-        Debug.Log("audio received");
+        short[] marshalledPCM = new short[frames * 2];
+        Marshal.Copy(pcm, marshalledPCM, 0, (int)frames * 2);        
+        pcmData.Enqueue(marshalledPCM);
+
+        Debug.Log($"Audio received with frames {frames}");
     }
 
-    //private void OnAudioFilterRead(float[] data, int channels)
-    //{
-    //    if (role == Role.Guest)
-    //    {
-    //        Debug.Log("poll!");
+    private void OnAudioFilterRead(float[] data, int channels)
+    {
+        if (role == Role.Guest)
+        {
+            parsec.ClientPollAudio(ClientReceiveAudio, 0u);
 
-    //        parsec.ClientPollAudio(ClientReceiveAudio, 60);
-    //    }
-    //}
+            if (pcmData.Count > 0)
+            {
+                short[] pcm = pcmData.Dequeue();
+
+                for (int i = 0; i < pcm.Length; i++)
+                {
+                    data[i] = (float)pcm[i] / short.MaxValue;
+                }
+            }
+        }
+    }
     #endregion
 }
