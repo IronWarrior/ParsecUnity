@@ -73,12 +73,14 @@ public class ParsecTest : MonoBehaviour
         StartCoroutine(CheckStatus());
     }
 
-    private void OnApplicationQuit()
+    private void OnDestroy()
     {
         if (parsec != null)
         {
             parsec.ParsecDestroy();
         }
+
+        pollAudio = false;
     }
 
     private void Host()
@@ -267,9 +269,13 @@ public class ParsecTest : MonoBehaviour
         Debug.Log($"Audio received with frames {frames}");
     }
 
+    private bool pollAudio;
+
     private void PollAudio()
     {
-        while (true)
+        pollAudio = true;
+
+        while (pollAudio)
         {
             parsec.ClientPollAudio(ClientReceiveAudio, 0u);
             Thread.Sleep(10);
