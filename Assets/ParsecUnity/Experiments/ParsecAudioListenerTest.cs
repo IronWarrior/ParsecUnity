@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class ParsecAudioSource : MonoBehaviour
+public class ParsecAudioListenerTest : MonoBehaviour
 {
     private void OnAudioFilterRead(float[] data, int channels)
     {

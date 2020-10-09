@@ -24,6 +24,9 @@ public class Player : MonoBehaviour
     [SerializeField]
     float fireSpeed = 10;
 
+    [SerializeField]
+    AudioClip fireAudioClip;
+
     private PlayerInput playerInput;
 
     private Vector3 velocity;
@@ -40,6 +43,8 @@ public class Player : MonoBehaviour
         projectile.velocity = fireSpeed * turret.transform.forward;
 
         Destroy(projectile.gameObject, 2f);
+
+        GetComponent<AudioSource>().PlayOneShot(fireAudioClip);
     }
 
     private void Update()

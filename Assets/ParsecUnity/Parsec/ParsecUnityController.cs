@@ -55,6 +55,11 @@ public class ParsecUnityController : MonoBehaviour
         StartCoroutine(HostSubmitFrame());
     }
 
+    public void StartHostAudio(AudioListener audioListener)
+    {
+        audioListener.gameObject.AddComponent<ParsecAudioListener>().Initialize(Parsec);
+    }
+
     private IEnumerator HostPollEvents()
     {
         while (true)

@@ -38,6 +38,8 @@ public class ParsecTest : MonoBehaviour
     [Header("Debug")]
     public bool pollClientFrame;
 
+    public AudioListener listener;
+
     private void Awake()
     {
         hostButton.onClick.AddListener(Host);
@@ -99,6 +101,8 @@ public class ParsecTest : MonoBehaviour
         parsec.KeyboardInput += Parsec_KeyboardInput;
         parsec.MouseMotion += Parsec_MouseMotion;
         parsec.MouseButton += Parsec_MouseButton;
+
+        listener.gameObject.AddComponent<ParsecAudioListenerTest>();
     }
 
     private void Parsec_MouseMotion(object sender, Parsec.ParsecGuest guest, Parsec.ParsecMouseMotionMessage mouseMotion)

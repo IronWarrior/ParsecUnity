@@ -1869,6 +1869,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 451223065104525628, guid: dbb3b3fc22718e544a92793f7d50e734,
     type: 3}
+  audioListener: {fileID: 2093344008}
 --- !u!1 &1241047096
 GameObject:
   m_ObjectHideFlags: 0

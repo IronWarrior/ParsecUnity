@@ -1658,7 +1658,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1349628297}
   - component: {fileID: 1349628296}
-  - component: {fileID: 1349628298}
   m_Layer: 0
   m_Name: AudioTest
   m_TagString: Untagged
@@ -1776,18 +1775,6 @@ Transform:
   m_Father: {fileID: 1520170595}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1349628298
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1349628295}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f12fe4283e34014b932e87ee570c306, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1460884105
 GameObject:
   m_ObjectHideFlags: 0
@@ -2236,6 +2223,8 @@ MonoBehaviour:
   tryCreateTextureToggle: {fileID: 1299252721}
   statusText: {fileID: 588410314}
   pollClientFrame: 0
+  listener: {fileID: 1684698925}
+  position: 0
 --- !u!4 &1657246903
 Transform:
   m_ObjectHideFlags: 0
@@ -2502,14 +2491,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1795036062}
   - component: {fileID: 1795036064}
-  - component: {fileID: 1795036063}
   m_Layer: 0
   m_Name: AudioTest 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1795036062
 Transform:
   m_ObjectHideFlags: 0
@@ -2524,18 +2512,6 @@ Transform:
   m_Father: {fileID: 1520170595}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1795036063
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1795036061}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f12fe4283e34014b932e87ee570c306, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!82 &1795036064
 AudioSource:
   m_ObjectHideFlags: 0

@@ -6,6 +6,9 @@ public class Game : MonoBehaviour
     [SerializeField]
     GameObject playerPrefab;
 
+    [SerializeField]
+    AudioListener audioListener;
+
     private Dictionary<int, GameObject> playersById;
 
     private void Awake()
@@ -22,6 +25,8 @@ public class Game : MonoBehaviour
         parsecUnityController.OnGuestConnected += ParsecUnityController_OnGuestConnected;
         parsecUnityController.OnGuestDisconnected += ParsecUnityController_OnGuestDisconnected;
         parsecUnityController.OnReceiveUserData += ParsecUnityController_OnReceiveUserData;
+
+        parsecUnityController.StartHostAudio(audioListener);
     }
 
     public void AddPlayer(int id, InputDeviceCollection deviceCollection)
