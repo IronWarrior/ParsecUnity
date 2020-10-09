@@ -277,7 +277,10 @@ public class ParsecTest : MonoBehaviour
 
         while (pollAudio)
         {
-            parsec.ClientPollAudio(ClientReceiveAudio, 0u);
+            // Audio polling is disabled on client for now. With the current Parsec dll, an error
+            // is thrown when the PCM data is marshalled. Modifying the dll fixes this error. Will
+            // leave this disabled until a new version of the dll has the error fixed.
+            //parsec.ClientPollAudio(ClientReceiveAudio, 0u);
             Thread.Sleep(10);
         }
     }
