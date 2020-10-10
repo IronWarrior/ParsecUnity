@@ -146,7 +146,8 @@ public class ParsecTest : MonoBehaviour
         #region Audio
         pcmData = new Queue<short[]>();
 
-        AudioClip clip = AudioClip.Create("ParsecInput", 960, 2, 48000, true, OnAudioRead, OnAudioSetPosition);
+        //AudioClip clip = AudioClip.Create("ParsecInput", 960, 2, 48000, true, OnAudioRead, OnAudioSetPosition);
+        AudioClip clip = AudioClip.Create("ParsecInput", 960, 2, 48000, true);
         AudioSource source = GetComponent<AudioSource>();
         source.clip = clip;
         source.loop = true;
@@ -263,14 +264,37 @@ public class ParsecTest : MonoBehaviour
     }
 
     private Queue<short[]> pcmData;
+    private Queue<short> pcmSamples;
 
     private void ClientReceiveAudio(IntPtr pcm, uint frames, IntPtr opaque)
     {
+        if (pcmSamples == null)
+            pcmSamples = new Queue<short>();
+
         short[] marshalledPCM = new short[frames * 2];
         Marshal.Copy(pcm, marshalledPCM, 0, (int)frames * 2);        
         pcmData.Enqueue(marshalledPCM);
 
+        for (int i = 0; i < marshalledPCM.Length; i++)
+        {
+            pcmSamples.Enqueue(marshalledPCM[i]);
+        }
+
         Debug.Log($"Audio received with frames {frames}");
+    }
+
+    private void OnAudioFilterRead(float[] data, int channels)
+    {
+        lock (pcmSamples)
+        {
+            if (pcmSamples.Count >= 1024 * 2)
+            {
+                for (int i = 0; i < data.Length; i++)
+                {
+                    data[i] = (float)pcmSamples.Dequeue() / short.MaxValue;
+                }
+            }
+        }
     }
 
     private bool pollAudio;

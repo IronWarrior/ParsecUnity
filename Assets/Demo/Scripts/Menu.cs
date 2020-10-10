@@ -76,6 +76,7 @@ public class Menu : MonoBehaviour
 
         parsecController.ClientSendUserData(rgbPicker.Color);
         parsecController.StartClientPollFrames();
+        parsecController.StartClientPollAudio();
 
         Destroy(gameObject);
     }

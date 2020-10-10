@@ -156,6 +156,14 @@ public class ParsecUnityController : MonoBehaviour
         StartCoroutine(ClientPollFrame());
     }
 
+    /// <summary>
+    /// Starts polling for incoming audio, feeding it into an audio source.
+    /// </summary>
+    public void StartClientPollAudio()
+    {
+        gameObject.AddComponent<ParsecGuestAudio>().Initialize(Parsec);
+    }
+
     public void ClientSendUserData(Color color)
     {
         string json = JsonUtility.ToJson(color);

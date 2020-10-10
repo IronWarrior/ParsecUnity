@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3216626056677132519}
   - component: {fileID: 3216626056677132516}
   - component: {fileID: 3216626056677132518}
+  - component: {fileID: -5560985717224988852}
   m_Layer: 8
   m_Name: ParsecGuestView
   m_TagString: MainCamera
@@ -89,6 +90,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   frame: {fileID: 3216626056764873287}
+--- !u!81 &-5560985717224988852
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3216626056677132517}
+  m_Enabled: 1
 --- !u!1 &3216626056764873285
 GameObject:
   m_ObjectHideFlags: 0
