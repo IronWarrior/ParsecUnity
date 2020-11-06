@@ -39,14 +39,14 @@
                 return o;
             }
 
-            // Conversion function from: https://stackoverflow.com/a/54334776
+            // Rec 709 to RGB matrix from: https://mymusing.co/bt-709-yuv-to-rgb-conversion-color/
             float3 YUVtoRGB(float3 yuv)
             {
                 float3 rgb;
 
-                rgb.r = yuv.x + yuv.z * 1.13983;
-                rgb.g = yuv.x + dot(fixed2(-0.39465, -0.58060), yuv.yz);
-                rgb.b = yuv.x + yuv.y * 2.03211;
+                rgb.r = yuv.x + 1.5748 * yuv.z;
+                rgb.g = yuv.x - 0.187324 * yuv.y - 0.478124 * yuv.z;
+                rgb.b = yuv.x + 1.8556 * yuv.y;
 
                 return rgb;
             }
@@ -70,7 +70,9 @@
                 float u = tex2D(_U, uv).x - 0.5;
                 float v = tex2D(_V, uv).x - 0.5;
 
-                return float4(YUVtoRGB(float3(y, u, v)), 1);
+                float3 rgb = YUVtoRGB(float3(y, u, v));
+
+                return float4(rgb, 1);
             }
             ENDCG
         }
